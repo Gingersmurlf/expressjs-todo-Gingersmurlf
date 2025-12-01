@@ -5,6 +5,7 @@ import path from "path"
 import { fileURLToPath } from "url"
 
 const PORT = 6767
+const fil = path.join(path.dirname(fileURLToPath(import.meta.url)), "todo.json")
 
 const app = express()
 app.use(express.json())
@@ -18,7 +19,7 @@ app.post("/indhold/sigma", (req, res) => {
     const { title } = req.body
     console.log(__dirname);
     
-    fs.readFile(path.join(__dirname, "todo.json"), "utf-8", (err, data) => {
+    fs.readFile(fil, "utf-8", (err, data) => {
         if (err) {
             return res.json({ error: "den kan ikke læse indholdet lil bro 💀🥷🥷" })
         }
@@ -37,7 +38,7 @@ app.post("/indhold/sigma", (req, res) => {
         superData.todos.push(newTodo)
         superData.lastId = newLastId
 
-        fs.writeFile("todo.json", JSON.stringify(superData, null, 2), (err) => {
+        fs.writeFile(fil, JSON.stringify(superData, null, 2), (err) => {
             if (err) {
                 res.json({ error: "jaer, den gider ikke at gemme dawg 🍔" })
             }
@@ -51,7 +52,7 @@ app.post("/indhold/sigma", (req, res) => {
 app.put("/todo/:id", (req, res) => {
     const id = req.params.id
     const { status } = req.body
-    fs.readFile("todo.json", "utf-8", (err, data) => {
+    fs.readFile(fil, "utf-8", (err, data) => {
         if (err) {
             return res.json({ error: "kan ikke forstå id" })
         }
@@ -73,7 +74,7 @@ app.put("/todo/:id", (req, res) => {
 
         fileData.todos[findId] = updatedTodo
 
-        fs.writeFile("todo.json", JSON.stringify(fileData, null, 2), (err) => {
+        fs.writeFile(fil, JSON.stringify(fileData, null, 2), (err) => {
             if (err) {
                 return res.json({ err: "id kan ikke updateres" })
             }
@@ -86,7 +87,7 @@ app.put("/todo/:id", (req, res) => {
 
 app.delete("/todo/delete/:id", (req, res) => {
     const id = req.params.id
-    fs.readFile("todo.json", "utf-8", (err, data) => {
+    fs.readFile(fil, "utf-8", (err, data) => {
         if (err) {
             return res.json({ err: "jaer gg, du cooked" })
         }
@@ -101,7 +102,7 @@ app.delete("/todo/delete/:id", (req, res) => {
 
         fileData.todos.splice(findId, 1)
 
-        fs.writeFile("todo.json", JSON.stringify(fileData, null, 2), (err) => {
+        fs.writeFile(fil, JSON.stringify(fileData, null, 2), (err) => {
             if (err) {
                 return res.json({ err: "du dum din kost" })
             }
@@ -112,7 +113,6 @@ app.delete("/todo/delete/:id", (req, res) => {
 
 app.get("/todos", (req, res) => {
 
-    const fil = path.join(path.dirname(fileURLToPath(import.meta.url)),"server", "todo.json")
    console.log(fil);
     
     fs.readFile(fil, (err, data) => {
