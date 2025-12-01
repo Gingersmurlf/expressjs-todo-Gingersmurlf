@@ -110,7 +110,9 @@ app.delete("/todo/delete/:id", (req, res) => {
 })
 
 app.get("/todos", (req, res) => {
-    fs.readFile("todo.json", (err, data) => {
+   console.log(__dirname);
+
+    fs.readFile(path.join(__dirname, "todo.json"), (err, data) => {
         if (err) {
             res.json({ error: "den kan ikke læse indholdet lil bro 💀🥷🥷" })
         }
